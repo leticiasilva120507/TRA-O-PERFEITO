@@ -86,14 +86,14 @@
 
 
 <section class="carrossel-imagens-explorar" onmouseenter="mostrarControles(this)" onmouseleave="esconderControles(this)">
-  <div class="container-imgs" ontouchstart="startSwipe(event, this)" ontouchmove="swipeMove(event)" ontouchend="endSwipe(event, this)">
+  <section class="container-imgs" ontouchstart="startSwipe(event, this)" ontouchmove="swipeMove(event)" ontouchend="endSwipe(event, this)">
     <% publicacao.imagens.forEach((img, idx) => { %>
       <img 
         src="data:image/jpeg;base64,<%= img.toString('base64') %>" 
         class="publicacao-img<%= idx === 0 ? ' ativa' : '' %>" 
         alt="Imagem da publicação"/>
     <% }) %>
-  </div>
+  </section>
 
   <section class="aviso-zoom">
     <ion-icon name="expand-outline"></ion-icon> <p>Clique para abrir a imagem</p>
@@ -103,16 +103,16 @@
     <button class="seta-carrossel esquerda" onclick="event.preventDefault();prevImg(this)"><ion-icon name="chevron-back-outline"></ion-icon></button>
     <button class="seta-carrossel direita" onclick="event.preventDefault();nextImg(this)"><ion-icon name="chevron-forward-outline"></ion-icon></button>
 
-    <div class="indicadores">
+    <section class="indicadores">
       <% publicacao.imagens.forEach((_, idx) => { %>
-        <span class="indicador<%= idx === 0 ? ' ativo' : '' %>"></span>
+        <p class="indicador<%= idx === 0 ? ' ativo' : '' %>"></p>
       <% }) %>
-    </div>
+    </section>
   <% } %>
 </section>
 
 <section class="con-img-expandida" id="con-img-expandida">
-  <span class="fechar" id="fechar">&times;</span>
+  <p class="fechar" id="fechar">&times;</p>
  <img src="" id="imgExpandida" alt="Imagem expandida">
  <button id="prevArrow" class="arrow left"><ion-icon name="chevron-back-outline"></ion-icon></button>
 <button id="nextArrow" class="arrow right"><ion-icon name="chevron-forward-outline"></ion-icon></button>
@@ -152,13 +152,13 @@
                         <section class="button-container-submit">
                             <% if (!tipo_usuario) { %>
                                 <button class="enviar-comentario" disabled>Enviar</button>
-                                <span class="tooltip">Crie uma conta para publicar um comentário.</span>
+                                <p class="tooltip">Crie uma conta para publicar um comentário.</p>
                             <% } else { %>
                                 <button class="enviar-comentario">Enviar</button>
                             <% } %>
                         </section>
                     </section>
-                    <div id="comentarios-lista"></div>
+                    <section id="comentarios-lista"></section>
                 </section>
                 <script>
                   window.idPublicacao = "<%= publicacao && publicacao.ID_PUBLICACAO ? publicacao.ID_PUBLICACAO : '' %>";
