@@ -83,9 +83,27 @@ const listagensController = {
       return res.status(404).send('Publicação não encontrada');
     }
 
+    let usuario = null;
+    if (req.session.autenticado && typeof req.session.autenticado === 'object' && req.session.autenticado.ID_USUARIO) {
+      usuario = req.session.autenticado;
+    } else if (req.session.autenticado && typeof req.session.autenticado === 'object') {
+      // Se autenticado for um objeto mas sem ID_USUARIO, tenta pegar o campo id
+      usuario = await listagensModel.findId(req.session.autenticado.id || req.session.autenticado.ID || req.session.autenticado);
+    } else if (req.session.autenticado) {
+      // Se autenticado for apenas o ID
+      usuario = await listagensModel.findId(req.session.autenticado);
+    }
+
+    if (req.session.autenticado && !usuario) {
+      // Usuário autenticado não encontrado no banco
+      return res.status(401).send('Usuário autenticado não encontrado. Faça login novamente.');
+    }
+
     console.log("Dados da publicação sendo exibida:", publicacao);
+    console.log("Usuário autenticado passado para a view:", usuario);
     res.render('pages/publicacao', {
-      publicacao
+      publicacao,
+      usuario: usuario || null
     });
   } catch (erro) {
     console.log(erro);
