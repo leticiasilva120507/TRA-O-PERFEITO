@@ -1,4 +1,16 @@
 {
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "moment": "^2.30.1",
+    "multer": "^2.0.2",
+    "mysql2": "^3.14.2"
+  },
+  "devDependencies": {},
   "name": "modelo-app-node",
   "version": "1.0.0",
   "homepage": "https://github.com/TracoPerfeito/TRA-O-PERFEITO#readme",
@@ -16,18 +28,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.2",
-    "dotenv": "^16.5.0",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-session": "^1.18.1",
-    "express-validator": "^7.1.0",
-    "moment": "^2.30.1",
-    "multer": "^2.0.1",
-    "mysql2": "^3.14.1"
-  },
-  "devDependencies": {},
   "description": ""
 }
