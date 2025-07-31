@@ -1,7 +1,6 @@
 // --- COMENTÁRIOS PUBLICAÇÃO ---
 // Supondo que existe um elemento com id="comentarios-lista" para listar comentários
 // e um textarea com id="ad-comentario" e botão com classe .enviar-comentario
-
 function carregarComentarios(idPublicacao) {
   fetch(`/comentarios/${idPublicacao}`)
     .then(res => res.json())
@@ -14,7 +13,9 @@ function carregarComentarios(idPublicacao) {
           <section class="comentario">
             <section class="comentario-info">
               <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
-              <a href="/perfil/${c.ID_USUARIO}"><p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p></a>
+              <a href="/perfil/${c.ID_USUARIO}">
+                <p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p>
+              </a>
             </section>
             <section class="escrita-comentario">
               <p>${c.CONTEUDO_COMENTARIO}</p>
@@ -29,40 +30,28 @@ function enviarComentario(idPublicacao, idUsuario) {
   const textarea = document.getElementById('ad-comentario');
   const texto = textarea.value.trim();
   if (!texto) return;
-  fetch(`/comentarios/${idPublicacao}`, {
+
+  fetch(`/comentarios`, {  // Corrigido
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ texto, id_usuario: idUsuario })
+    body: JSON.stringify({ id_publicacao: idPublicacao, id_usuario: idUsuario, texto })
   })
     .then(res => res.json())
-    .then(comentarios => {
+    .then(() => {
       textarea.value = '';
-      const lista = document.getElementById('comentarios-lista');
-      if (!lista) return;
-      lista.innerHTML = '';
-      if (!Array.isArray(comentarios) || comentarios.length === 0) {
-        lista.innerHTML = '<p style="color:red">Nenhum comentário retornado ou erro na resposta.</p>';
-        return;
-      }
-      comentarios.forEach(c => {
-        lista.innerHTML += `
-          <section class="comentario">
-            <section class="comentario-info">
-              <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
-              <a href="/perfil/${c.ID_USUARIO}"><p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p></a>
-            </section>
-            <section class="escrita-comentario">
-              <p>${c.CONTEUDO_COMENTARIO}</p>
-            </section>
-          </section>
-        `;
-      });
+      carregarComentarios(idPublicacao); // Atualiza lista
     })
-    .catch(err => {
+    .catch(() => {
       const lista = document.getElementById('comentarios-lista');
       if (lista) lista.innerHTML = '<p style="color:red">Erro ao carregar comentários.</p>';
     });
 }
+
+// Atualiza automaticamente
+setInterval(() => {
+  carregarComentarios(idPublicacao);
+}, 3000);
+
 
 // Exemplo de uso (adicione no onload da página de publicação):
 // const idPublicacao = ...; // Pegue do backend

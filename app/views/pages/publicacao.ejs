@@ -141,38 +141,66 @@
 
 
 
+<script>
+async function carregarComentarios(idPublicacao) {
+  try {
+    const res = await fetch(`/comentarios/${idPublicacao}`);
+    const comentarios = await res.json();
+    renderizarComentarios(comentarios);
+  } catch (err) {
+    console.error('Erro ao carregar comentários', err);
+  }
+}
 
-                <section class="comentarios">
-                    <h2 id="comentarios-nome-secao"> Comentários</h2>
-                    <% if (autenticado) { %>
-                    <section class="adicionar-comentario">
-                        <label for="adicionar-comentario">Adicionar comentário:</label>
-                        <textarea id="ad-comentario" name="ad-comentario" rows="4" cols="50" placeholder="Digite seu comentário aqui..."></textarea>
-                        <br>
-                        <section class="button-container-submit">
-                            <button class="enviar-comentario">Enviar</button>
-                        </section>
-                    </section>
-                    <% } else { %>
-                        <p style="color:gray; margin-bottom: 10px;">Faça login para comentar.</p>
-                    <% } %>
-                    <section id="comentarios-lista"></section>
-                </section>
-                <script>
-                  window.idPublicacao = "<%= publicacao && publicacao.ID_PUBLICACAO ? publicacao.ID_PUBLICACAO : '' %>";
-                  window.idUsuario = "<%= usuario && usuario.ID_USUARIO ? usuario.ID_USUARIO : '' %>";
-                  document.addEventListener('DOMContentLoaded', function() {
-                    if (window.idPublicacao) {
-                      carregarComentarios(window.idPublicacao);
-                    }
-                    var btnEnviar = document.querySelector('.enviar-comentario:not([disabled])');
-                    if (btnEnviar) {
-                      btnEnviar.addEventListener('click', function() {
-                        enviarComentario(window.idPublicacao, window.idUsuario);
-                      });
-                    }
-                  });
-                </script>
+async function enviarComentario(idPublicacao, idUsuario) {
+  const texto = document.getElementById('ad-comentario').value.trim();
+  if (!texto) return;
+
+  try {
+    const res = await fetch('/comentarios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id_publicacao: idPublicacao,
+        id_usuario: idUsuario,
+        texto
+      })
+    });
+
+    const comentariosAtualizados = await res.json();
+    renderizarComentarios(comentariosAtualizados);
+    document.getElementById('ad-comentario').value = '';
+  } catch (err) {
+    console.error('Erro ao enviar comentário', err);
+  }
+}
+
+function renderizarComentarios(comentarios) {
+  const lista = document.getElementById('comentarios-lista');
+  lista.innerHTML = '';
+
+  comentarios.forEach(c => {
+    const div = document.createElement('div');
+    div.classList.add('comentario');
+    div.innerHTML = `
+      <div class="comentario-usuario">
+        <img src="/${c.FOTO_PERFIL_PASTA_USUARIO || 'imagens/default-profile.png'}" class="foto-comentario">
+        <strong>${c.NOME_USUARIO}</strong>
+      </div>
+      <p>${c.CONTEUDO_COMENTARIO}</p>
+    `;
+    lista.appendChild(div);
+  });
+}
+
+// Carregar ao abrir página
+if (window.idPublicacao) carregarComentarios(window.idPublicacao);
+
+// Atualizar automaticamente a cada 3 segundos
+setInterval(() => {
+  if (window.idPublicacao) carregarComentarios(window.idPublicacao);
+}, 3000);
+</script>
 
 
             <section class="publi-relacionadas">

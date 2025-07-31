@@ -65,6 +65,15 @@ router.get("/publicacao/:id", function (req, res) { //publicacao
 
 });
 
+const comentariosController = require('../controllers/comentariosController');
+
+// Buscar comentários de uma publicação
+router.get('/comentarios/:idPublicacao', comentariosController.listarPorPublicacao);
+
+// Inserir novo comentário
+router.post('/comentarios', comentariosController.adicionarComentario);
+
+
 
 
 router.get("/chat", function (req, res) { //chat
