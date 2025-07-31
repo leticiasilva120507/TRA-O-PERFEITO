@@ -1,27 +1,36 @@
 const comentariosModel = require('../models/comentariosModel');
 
 const comentariosController = {
-  async listarPorPublicacao(req, res) {
+  async listarComentarios(req, res) {
+    const idPublicacao = req.params.idPublicacao;
     try {
-      const { idPublicacao } = req.params;
       const comentarios = await comentariosModel.buscarPorPublicacao(idPublicacao);
       res.json(comentarios);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error('Erro ao buscar comentários:', error);
       res.status(500).json({ erro: 'Erro ao buscar comentários' });
     }
   },
 
-  async adicionarComentario(req, res) {
-    try {
-      const { id_publicacao, id_usuario, texto } = req.body;
-      await comentariosModel.inserir({ id_publicacao, id_usuario, texto });
+  async postarComentario(req, res) {
+    const idPublicacao = req.params.idPublicacao;
+    const { texto, id_usuario, id_publicacao } = req.body;
 
-      // Após inserir, retorna lista atualizada
-      const comentarios = await comentariosModel.buscarPorPublicacao(id_publicacao);
-      res.json(comentarios);
-    } catch (err) {
-      console.error(err);
+    if (!texto || !id_usuario || !id_publicacao) {
+      return res.status(400).json({ erro: 'Dados incompletos' });
+    }
+
+    if (parseInt(idPublicacao) !== parseInt(id_publicacao)) {
+      return res.status(400).json({ erro: 'ID da publicação inconsistente' });
+    }
+
+    try {
+      await comentariosModel.inserir({ id_publicacao, id_usuario, texto });
+      // Após inserir, já retorna a lista atualizada
+      const comentariosAtualizados = await comentariosModel.buscarPorPublicacao(idPublicacao);
+      res.json(comentariosAtualizados);
+    } catch (error) {
+      console.error('Erro ao inserir comentário:', error);
       res.status(500).json({ erro: 'Erro ao inserir comentário' });
     }
   }

@@ -1,7 +1,6 @@
 const pool = require('../../config/pool_conexoes');
 
 const comentariosModel = {
-  // Buscar comentários de uma publicação
   async buscarPorPublicacao(idPublicacao) {
     const [rows] = await pool.query(
       `SELECT c.ID_COMENTARIO, c.ID_USUARIO, u.NOME_USUARIO, c.CONTEUDO_COMENTARIO, c.DATA_COMENTARIO, u.FOTO_PERFIL_PASTA_USUARIO
@@ -14,13 +13,13 @@ const comentariosModel = {
     return rows;
   },
 
-  // Inserir novo comentário
   async inserir({ id_publicacao, id_usuario, texto }) {
     const [result] = await pool.query(
-      'INSERT INTO COMENTARIOS (ID_PUBLICACAO, ID_USUARIO, CONTEUDO_COMENTARIO) VALUES (?, ?, ?)',
+      `INSERT INTO COMENTARIOS (ID_PUBLICACAO, ID_USUARIO, CONTEUDO_COMENTARIO, DATA_COMENTARIO)
+       VALUES (?, ?, ?, NOW())`,
       [id_publicacao, id_usuario, texto]
     );
-    return { id: result.insertId, id_publicacao, id_usuario, texto };
+    return result.insertId;
   }
 };
 
