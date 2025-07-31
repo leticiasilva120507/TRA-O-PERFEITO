@@ -2,33 +2,41 @@
 // Supondo que existe um elemento com id="comentarios-lista" para listar comentários
 // e um textarea com id="ad-comentario" e botão com classe .enviar-comentario
 
+function renderComentarios(comentarios) {
+  const lista = document.getElementById('comentarios-lista');
+  if (!lista) return;
+
+  lista.innerHTML = ''; // Limpa lista
+  comentarios.forEach(c => {
+    const comentarioEl = document.createElement('section');
+    comentarioEl.classList.add('comentario');
+
+    comentarioEl.innerHTML = `
+      <section class="comentario-info">
+        <img src="${c.FOTO_PERFIL_PASTA_USUARIO || '/imagens/fotoperfil1.jpeg'}" class="foto-de-perfil">
+        <a href="/perfil/${c.ID_USUARIO}">
+          <p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p>
+        </a>
+      </section>
+      <section class="escrita-comentario">
+        <p>${c.CONTEUDO_COMENTARIO}</p>
+      </section>
+    `;
+    lista.appendChild(comentarioEl);
+  });
+}
+
 function carregarComentarios(idPublicacao) {
   fetch(`/comentarios/${idPublicacao}`)
     .then(res => res.json())
-    .then(comentarios => {
-      const lista = document.getElementById('comentarios-lista');
-      if (!lista) return;
-      lista.innerHTML = '';
-      comentarios.forEach(c => {
-        lista.innerHTML += `
-          <section class="comentario">
-            <section class="comentario-info">
-              <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
-              <a href="/perfil/${c.ID_USUARIO}"><p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p></a>
-            </section>
-            <section class="escrita-comentario">
-              <p>${c.CONTEUDO_COMENTARIO}</p>
-            </section>
-          </section>
-        `;
-      });
-    });
+    .then(comentarios => renderComentarios(comentarios));
 }
 
 function enviarComentario(idPublicacao, idUsuario) {
   const textarea = document.getElementById('ad-comentario');
   const texto = textarea.value.trim();
   if (!texto) return;
+
   fetch(`/comentarios/${idPublicacao}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -37,30 +45,7 @@ function enviarComentario(idPublicacao, idUsuario) {
     .then(res => res.json())
     .then(comentarios => {
       textarea.value = '';
-      const lista = document.getElementById('comentarios-lista');
-      if (!lista) return;
-      lista.innerHTML = '';
-      if (!Array.isArray(comentarios) || comentarios.length === 0) {
-        lista.innerHTML = '<p style="color:red">Nenhum comentário retornado ou erro na resposta.</p>';
-        return;
-      }
-      comentarios.forEach(c => {
-        lista.innerHTML += `
-          <section class="comentario">
-            <section class="comentario-info">
-              <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
-              <a href="/perfil/${c.ID_USUARIO}"><p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p></a>
-            </section>
-            <section class="escrita-comentario">
-              <p>${c.CONTEUDO_COMENTARIO}</p>
-            </section>
-          </section>
-        `;
-      });
-    })
-    .catch(err => {
-      const lista = document.getElementById('comentarios-lista');
-      if (lista) lista.innerHTML = '<p style="color:red">Erro ao carregar comentários.</p>';
+      renderComentarios(comentarios);
     });
 }
 
