@@ -65,11 +65,6 @@ router.get("/publicacao/:id", function (req, res) { //publicacao
 
 });
 
-const comentariosRoutes = require('./routes/comentariosRoutes');
-app.use('/comentarios', comentariosRoutes);
-
-
-
 
 
 router.get("/chat", function (req, res) { //chat

@@ -2,148 +2,344 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/imagens/favicon.ico" type="image/x-icon">
+    
     <link rel="stylesheet" href="/css/publicacao.css">
-    <link rel="stylesheet" href="/css/share-button.css">
+     <link rel="stylesheet" href="/css/share-button.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
+   
+
+    
     <title>Publicação</title>
 </head>
+
+
+
 <body>
 
+ 
+
    <% if (tipo_usuario === 'profissional') { %>
-      <%- include('../partials/menu-logado', { tipo_usuario: tipo_usuario }) %>
-   <% } else if (tipo_usuario === 'comum') { %>
-      <%- include('../partials/menu-c-c', { tipo_usuario: tipo_usuario }) %>
-   <% } else { %>
-      <%- include('../partials/menu', { tipo_usuario: tipo_usuario }) %>
-   <% } %>
-
-   <main>
-       <!-- Seu conteúdo principal aqui -->
-       
-       <div id="comentarios-lista">
-           <!-- Comentários aparecerão aqui -->
-       </div>
-
-       <% if (usuario) { %>
-           <textarea id="ad-comentario" rows="3" placeholder="Digite seu comentário"></textarea><br>
-           <button id="btn-enviar-comentario">Enviar Comentário</button>
-       <% } else { %>
-           <p>Faça login para comentar.</p>
-       <% } %>
-
-       <!-- Resto do seu conteúdo -->
-
-   </main>
-
-   <%- include('../partials/rodape'); %>
-
-   <!-- Seus outros scripts -->
-   <script src="/js/like.js"></script>
-   <script src="/js/voltar.js"></script>
-   <script src="/js/expan-img.js"></script>
-   <script src="/js/mobile-navbar.js"></script>
-   <script src="/js/denuncia-compartilhamento.js"></script>
-   <script src="/js/publicacoesindex.js"></script>
-
-   <!-- Script para carregar e enviar comentários -->
-   <script>
-      // Variáveis definidas com dados do backend
-      const idPublicacao = "<%= publicacao.ID_PUBLICACAO %>";
-const idUsuario = "<%= usuario ? usuario.ID_USUARIO : '' %>";
+  <%- include('../partials/menu-logado', { tipo_usuario: tipo_usuario }) %>
+<% } else if (tipo_usuario === 'comum') { %>
+  <%- include('../partials/menu-c-c', { tipo_usuario: tipo_usuario }) %>
+<% } else { %>
+  <%- include('../partials/menu', { tipo_usuario: tipo_usuario }) %>
+<% } %>
 
 
-      function carregarComentarios(idPublicacao) {
-          fetch(`/comentarios/${idPublicacao}`)
-          .then(res => res.json())
-          .then(comentarios => {
-              const lista = document.getElementById('comentarios-lista');
-              if (!lista) return;
-              lista.innerHTML = '';
-              if (comentarios.length === 0) {
-                  lista.innerHTML = '<p>Nenhum comentário ainda.</p>';
-                  return;
-              }
-              comentarios.forEach(c => {
-                  lista.innerHTML += `
-                  <section class="comentario">
-                      <section class="comentario-info">
-                          <img src="${c.FOTO_PERFIL_PASTA_USUARIO || '/imagens/fotoperfil1.jpeg'}" class="foto-de-perfil" >
-                          <a href="/perfil/${c.ID_USUARIO}">
-                              <p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p>
-                          </a>
-                      </section>
-                      <section class="escrita-comentario">
-                          <p>${c.CONTEUDO_COMENTARIO}</p>
-                          <small>${new Date(c.DATA_COMENTARIO).toLocaleString()}</small>
-                      </section>
-                  </section>
-                  `;
-              });
-          })
-          .catch(() => {
-              const lista = document.getElementById('comentarios-lista');
-              if (lista) lista.innerHTML = '<p style="color:red">Erro ao carregar comentários.</p>';
-          });
-      }
 
-      function enviarComentario() {
-          const textarea = document.getElementById('ad-comentario');
-          const texto = textarea.value.trim();
-          if (!texto) return alert('Digite um comentário.');
+    
+    <main>
 
-          fetch(`/comentarios/${idPublicacao}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ texto, id_usuario: idUsuario, id_publicacao: idPublicacao })
-          })
-          .then(res => res.json())
-          .then(comentarios => {
-              textarea.value = '';
-              const lista = document.getElementById('comentarios-lista');
-              if (!lista) return;
-              lista.innerHTML = '';
-              if (comentarios.length === 0) {
-                  lista.innerHTML = '<p style="color:red">Nenhum comentário retornado.</p>';
-                  return;
-              }
-              comentarios.forEach(c => {
-                  lista.innerHTML += `
-                  <section class="comentario">
-                      <section class="comentario-info">
-                          <img src="${c.FOTO_PERFIL_PASTA_USUARIO || '/imagens/fotoperfil1.jpeg'}" class="foto-de-perfil" >
-                          <a href="/perfil/${c.ID_USUARIO}">
-                              <p class="nome-comentario">${c.NOME_USUARIO || 'Usuário'}</p>
-                          </a>
-                      </section>
-                      <section class="escrita-comentario">
-                          <p>${c.CONTEUDO_COMENTARIO}</p>
-                          <small>${new Date(c.DATA_COMENTARIO).toLocaleString()}</small>
-                      </section>
-                  </section>
-                  `;
-              });
-          })
-          .catch(() => {
-              const lista = document.getElementById('comentarios-lista');
-              if (lista) lista.innerHTML = '<p style="color:red">Erro ao enviar comentário.</p>';
-          });
-      }
+        <section class="botao-de-voltar">   
+            <button class="btn-voltar" onclick="voltarPagina()"> <ion-icon name="arrow-back-outline" id="seta"></ion-icon>
+                
+               
+            </button>
+            <p class="lado-botao">Publicação de <%= publicacao.NOME_USUARIO %></p>
+        </section>
 
-      document.addEventListener('DOMContentLoaded', () => {
-          carregarComentarios(idPublicacao);
-          const btnEnviar = document.getElementById('btn-enviar-comentario');
-          if (btnEnviar) btnEnviar.addEventListener('click', enviarComentario);
-      });
-   </script>
+      
+
+        <section class="container-pag-publi">
+
+            <section class="principal-pag-publi">
+
+               <section class="publi-person-button">
+  <section class="publi-info">
+    <!-- Foto do perfil do usuário -->
+    <img src="/<%= publicacao.FOTO_PERFIL_PASTA_USUARIO || '/imagens/default-profile.png' %>" class="foto-de-perfil" alt="Foto do perfil">
+
+    <!-- Link para o perfil do usuário, usando o ID do usuário -->
+    <a href="/perfil/<%= publicacao.ID_USUARIO %>">
+      <p class="nome-dono-post"><%= publicacao.NOME_USUARIO %></p>
+    </a>
+  </section>
+
+  <section class="menu-opcoes"> <!-- Denunciar e compartilhar-->
+    <svg class="icone-menu" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+      <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
+    </svg>
+
+    <section class="opcoes-menu">
+      <button class="btn-compartilhar" title="Compartilhar" id="openShareModal" onclick="openModal()">
+        <ion-icon name="share-social-outline"></ion-icon>
+        Compartilhar
+      </button>
+      <button class="btn-denunciar" title="Denunciar">
+        <ion-icon name="flag-outline"></ion-icon>
+        Denunciar
+      </button>
+    </section>
+  </section>
+</section>
+
+
+<section class="carrossel-imagens-explorar" onmouseenter="mostrarControles(this)" onmouseleave="esconderControles(this)">
+  <section class="container-imgs" ontouchstart="startSwipe(event, this)" ontouchmove="swipeMove(event)" ontouchend="endSwipe(event, this)">
+    <% publicacao.imagens.forEach((img, idx) => { %>
+      <img 
+        src="data:image/jpeg;base64,<%= img.toString('base64') %>" 
+        class="publicacao-img<%= idx === 0 ? ' ativa' : '' %>" 
+        alt="Imagem da publicação"/>
+    <% }) %>
+  </section>
+
+  <section class="aviso-zoom">
+    <ion-icon name="expand-outline"></ion-icon> <p>Clique para abrir a imagem</p>
+  </section>
+
+  <% if (publicacao.imagens.length > 1) { %>
+    <button class="seta-carrossel esquerda" onclick="event.preventDefault();prevImg(this)"><ion-icon name="chevron-back-outline"></ion-icon></button>
+    <button class="seta-carrossel direita" onclick="event.preventDefault();nextImg(this)"><ion-icon name="chevron-forward-outline"></ion-icon></button>
+
+    <section class="indicadores">
+      <% publicacao.imagens.forEach((_, idx) => { %>
+        <p class="indicador<%= idx === 0 ? ' ativo' : '' %>"></p>
+      <% }) %>
+    </section>
+  <% } %>
+</section>
+
+<section class="con-img-expandida" id="con-img-expandida">
+  <p class="fechar" id="fechar">&times;</p>
+ <img src="" id="imgExpandida" alt="Imagem expandida">
+ <button id="prevArrow" class="arrow left"><ion-icon name="chevron-back-outline"></ion-icon></button>
+<button id="nextArrow" class="arrow right"><ion-icon name="chevron-forward-outline"></ion-icon></button>
+
+
+</section>
+
+
+
+
+<section class="descricao-like">
+  <section class="nome-like">
+    <!-- Nome da publicação -->
+    <p class="nome-da-publicacao"><%= publicacao.NOME_PUBLICACAO %></p>
+
+    <button class="like-button" title="Curtir">
+      <i class="far fa-heart"></i>
+    </button>
+  </section>
+
+  <!-- Descrição da publicação -->
+  <p class="descricao-publi-prin"><%= publicacao.DESCRICAO_PUBLICACAO %></p>
+</section>
+
+</section>
+
+
+
+
+
+                <section class="comentarios">
+                    <h2 id="comentarios-nome-secao"> Comentários</h2>
+                    <section class="adicionar-comentario">
+                        <label for="adicionar-comentario">Adicionar comentário:</label>
+                        <textarea id="ad-comentario" name="ad-comentario" rows="4" cols="50" placeholder="Digite seu comentário aqui..."></textarea>
+                        <br>
+                        <section class="button-container-submit">
+                            <% if (!tipo_usuario) { %>
+                                <button class="enviar-comentario" disabled>Enviar</button>
+                                <p class="tooltip">Crie uma conta para publicar um comentário.</p>
+                            <% } else { %>
+                                <button class="enviar-comentario">Enviar</button>
+                            <% } %>
+                        </section>
+                    </section>
+                    <section id="comentarios-lista"></section>
+                </section>
+                <script>
+                  window.idPublicacao = "<%= publicacao && publicacao.ID_PUBLICACAO ? publicacao.ID_PUBLICACAO : '' %>";
+                  window.idUsuario = "<%= usuario && usuario.ID_USUARIO ? usuario.ID_USUARIO : '' %>";
+                  document.addEventListener('DOMContentLoaded', function() {
+                    if (window.idPublicacao) {
+                      carregarComentarios(window.idPublicacao);
+                    }
+                    var btnEnviar = document.querySelector('.enviar-comentario:not([disabled])');
+                    if (btnEnviar) {
+                      btnEnviar.addEventListener('click', function() {
+                        enviarComentario(window.idPublicacao, window.idUsuario);
+                      });
+                    }
+                  });
+                </script>
+
+
+            <section class="publi-relacionadas">
+
+
+                    <h2 id="publi-rel-nome-secao">
+                        Publicações Relacionadas
+                    </h2>
+                    
+               
+                <section class="publicacoes-rel-caixas">
+    
+                    <section class="publi-re">
+                        <img src="/imagens/2.jpg" >
+
+                        <section class="publi-rel-info">
+
+                            <section class="foto-nome-p-rel">
+                                <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
+                                <a href=/perfil>
+                                    <p>Joaquina Fernandes</p>
+                                </a>
+                            </section>
+                            <button class="like-button" title="Curtir">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </section>
+
+                    </section>
+
+
+                    <section class="publi-re">
+                        <img src="/imagens/aao.jpg" >
+
+                        <section class="publi-rel-info">
+
+                            <section class="foto-nome-p-rel">
+                                <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
+                                <a href=/perfil>
+                                    <p>Joaquina Fernandes</p>
+                                </a>
+                            </section>
+                            <button class="like-button" title="Curtir">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </section>
+
+                    </section>
+
+
+                    <section class="publi-re">
+                        <img src="/imagens/aas.jpg" >
+
+                        <section class="publi-rel-info">
+
+                            <section class="foto-nome-p-rel">
+                                <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
+                                <a href=/perfil>
+                                    <p>Joaquina Fernandes</p>
+                                </a>
+                            </section>
+                            <button class="like-button" title="Curtir">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </section>
+
+                    </section>
+
+                    
+                    <section class="publi-re">
+                        <img src="/imagens/aad.jpg" >
+
+                        <section class="publi-rel-info">
+
+                            <section class="foto-nome-p-rel">
+                                <img src="/imagens/fotoperfil1.jpeg" class="foto-de-perfil" >
+                                <a href=/perfil>
+                                    <p>Joaquina Fernandes</p>
+                                </a>
+                            </section>
+                            <button class="like-button" title="Curtir">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </section>
+
+                    </section>
+
+                   
+    
+                </section>
+
+            </section>
+
+
+            </section>
+        </section>
+
+
+
+        
+
+                                                <!-- Modal de denúncia -->
+                        <section id="modalDenuncia" class="modal">
+                            <section class="modal-content">
+                            <h3>Qual o motivo da denúncia?</h3>
+                            <form id="formDenuncia">
+                                <label><input type="radio" name="motivo" value="Conteúdo ofensivo"> Conteúdo ofensivo</label><br>
+                                <label><input type="radio" name="motivo" value="Spam"> Spam</label><br>
+                                <label><input type="radio" name="motivo" value="Informação falsa ou enganosa"> Informação falsa ou enganosa</label><br>
+                                <label><input type="radio" name="motivo" value="Nudez ou conteúdo sexual"> Nudez ou conteúdo sexual</label><br>
+                                <label><input type="radio" name="motivo" value="Plágio ou cópia não autorizada"> Plágio ou cópia não autorizada</label><br>
+                                <label><input type="radio" name="motivo" value="Outro"> Outro</label><br><br>
+                                <button type="submit">Enviar denúncia</button>
+                                <button type="button" id="fecharModal">Cancelar</button>
+                            </form>
+                            </section>
+                        </section>
+
+
+
+                <!-- Modal de compartilhamento -->
+                <section id="modal-share">
+                <section class="modal-content-share">
+                    <h2>Compartilhar link da publicação</h2>
+
+                    <section class="link-container">
+                    <section id="shareLink">
+                      https://tracoperfeito.onrender.com/publicacao
+                    </section>
+
+                    <button class="copy-button" onclick="copyToClipboard()">
+                        <section id="copyIcon">
+                       
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; margin-right: 4px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2M16 8h2a2 2 0 012 2v8a2 2 0 01-2 2h-8a2 2 0 01-2-2v-2"/>
+                            </svg>
+      
+                        </section>
+                        <section id="copyText">Copiar link</section>
+                        <section id="tooltip">Copiado!</section>
+                    </button>
+                    </section>
+
+                    <button class="close-modal-btn" onclick="closeModal()">×</button>
+                </section>
+                </section>
+
+
+           
+
+
+
+    </main>
+
+
+
+
+
+    <%- include('../partials/rodape'); %>
+    <script src="/js/like.js"></script>
+    <script src="/js/voltar.js"></script>
+    <script src="/js/expan-img.js"></script>
+    <script src="/js/mobile-navbar.js"></script>
+    <script src="/js/denuncia-compartilhamento.js"></script>
+    <script src="/js/publicacoesindex.js"></script>
 
 </body>
 </html>
