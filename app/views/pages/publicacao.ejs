@@ -5,9 +5,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/imagens/favicon.ico" type="image/x-icon">
-    
     <link rel="stylesheet" href="/css/publicacao.css">
-     <link rel="stylesheet" href="/css/share-button.css">
+    <link rel="stylesheet" href="/css/share-button.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -58,7 +57,7 @@
                <section class="publi-person-button">
   <section class="publi-info">
     <!-- Foto do perfil do usuário -->
-    <img src="/<%= publicacao.FOTO_PERFIL_PASTA_USUARIO || '/imagens/default-profile.png' %>" class="foto-de-perfil" alt="Foto do perfil">
+    <img src="/<%= publicacao.FOTO_PERFIL_PASTA_USUARIO ? publicacao.FOTO_PERFIL_PASTA_USUARIO : 'imagens/default-profile.png' %>" class="foto-de-perfil" alt="Foto do perfil">
 
     <!-- Link para o perfil do usuário, usando o ID do usuário -->
     <a href="/perfil/<%= publicacao.ID_USUARIO %>">
