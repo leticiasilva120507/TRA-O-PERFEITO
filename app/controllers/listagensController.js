@@ -94,16 +94,16 @@ const listagensController = {
       usuario = await listagensModel.findId(req.session.autenticado);
     }
 
-    if (req.session.autenticado && !usuario) {
-      // Usuário autenticado não encontrado no banco
-      return res.status(401).send('Usuário autenticado não encontrado. Faça login novamente.');
-    }
+    // Só bloqueia se o usuário estiver autenticado mas não for encontrado no banco
+    // Se não encontrar o usuário autenticado, apenas trata como visitante
+    // Se não estiver autenticado, apenas mostra a publicação normalmente
 
     console.log("Dados da publicação sendo exibida:", publicacao);
     console.log("Usuário autenticado passado para a view:", usuario);
     res.render('pages/publicacao', {
       publicacao,
-      usuario: usuario || null
+      usuario: usuario || null,
+      autenticado: !!usuario // true se logado, false se não
     });
   } catch (erro) {
     console.log(erro);

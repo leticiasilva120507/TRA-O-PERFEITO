@@ -29,17 +29,21 @@ const listagensModel = {
 },
 
   findId: async (id) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM USUARIOS WHERE ID_USUARIO = ?', [id]);
-    if (rows.length === 0) {
-      return null; // Retorna null se não encontrou
+    // Só executa a query se o id for um número válido
+    if (!id || isNaN(Number(id))) {
+      return null;
     }
-    return rows[0]; // Retorna o usuário (objeto)
-  } catch (error) {
-    console.log(error);
-    throw error; // Lança erro para o controller tratar
-  }
-},
+    try {
+      const [rows] = await pool.query('SELECT * FROM USUARIOS WHERE ID_USUARIO = ?', [id]);
+      if (rows.length === 0) {
+        return null; // Retorna null se não encontrou
+      }
+      return rows[0]; // Retorna o usuário (objeto)
+    } catch (error) {
+      console.log(error);
+      throw error; // Lança erro para o controller tratar
+    }
+  },
 
 findEspecializacaoByUserId: async (id) => {
     try {
