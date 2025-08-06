@@ -65,6 +65,10 @@ router.get("/publicacao/:id", function (req, res) { //publicacao
 
 });
 
+const comentariosRouter = require('./routes/comentarios'); // ajuste o caminho
+app.use('/comentarios', comentariosRouter);
+
+
 
 
 router.get("/chat", function (req, res) { //chat
