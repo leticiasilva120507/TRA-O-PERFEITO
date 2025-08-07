@@ -29,6 +29,9 @@
 
 <body>
 
+
+  
+
  
 
    <% if (tipo_usuario === 'profissional') { %>
@@ -45,6 +48,24 @@
     notify("<%= dadosNotificacao.titulo %>", "<%= dadosNotificacao.mensagem %>", "<%= dadosNotificacao.tipo %>", "top right");
   </script>
 <% } %>
+
+
+<%
+let cssErros = {conteudo: ""};
+let msgErros = {conteudo: ""};
+
+if(listaErros){
+    listaErros.errors.forEach(function (elemento){
+        if(elemento.path == "conteudo"){
+            cssErros.conteudo = "erro-form";
+            msgErros.conteudo = elemento.msg;
+        }
+ 
+    });
+}
+%>
+
+
 
 
     
@@ -158,7 +179,7 @@
 
                         <form action="/salvarcomentario" method="post">
                           <label for="adicionar-comentario">Adicionar comentário:</label>
-                          <textarea id="ad-comentario" name="conteudo" rows="4" cols="50" placeholder="Digite seu comentário aqui..."></textarea>
+                          <textarea id="ad-comentario" name="conteudo" rows="4" cols="50" placeholder="Digite seu comentário aqui..." class="<%= cssErros.conteudo %>"></textarea>
                           <p class="msg-erro"></p>
                           <input type="hidden" name="idPublicacao" value="<%= publicacao.ID_PUBLICACAO %>">
                           <br>
@@ -172,7 +193,28 @@
                           </section>
                         </form>
                     </section>
-                    <section id="comentarios-lista"></section>
+                    
+
+                    <section class="comentarios">
+                      <% if (comentarios && comentarios.length > 0) { %>
+                        <% comentarios.forEach(comentario => { %>
+                          <section class="comentario">
+                            <section class="comentario-info">
+                              <img src="<%= comentario.FOTO_PERFIL || '/imagens/fotoperfil1.jpeg' %>" class="foto-de-perfil" >
+                              <a href="/perfil/<%= comentario.ID_USUARIO %>">
+                                <p class="nome-comentario"><%= comentario.NOME %></p>
+                              </a>
+                            </section>
+                            <section class="escrita-comentario">
+                              <p><%= comentario.CONTEUDO_COMENTARIO %></p>
+                            </section>
+                          </section>
+                        <% }) %>
+                      <% } else { %>
+                        <p>Não há comentários.</p>
+                      <% } %>
+                    </section>
+                    
                 </section>
               
 

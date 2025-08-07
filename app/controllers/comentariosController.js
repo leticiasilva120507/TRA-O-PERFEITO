@@ -1,7 +1,8 @@
 const comentariosModel = require("../models/comentariosModel");
+const listagensModel = require("../models/listagensModel");
 const { body, validationResult } = require("express-validator");
 const moment = require("moment");
-const { regrasValidacaoCadastro } = require("./usuariosController");
+
 
 
 const comentariosController = {
@@ -21,9 +22,22 @@ const comentariosController = {
       console.log('Body:', req.body);
 
       const erros = validationResult(req);
-      if(!erros.isEmpty()){
+      if (!erros.isEmpty()) {
         console.log("Deu erro na validação af");
-        return res.status(400).json({erros:erros});
+      
+        
+        const { idPublicacao } = req.body;
+        const publicacao = await listagensModel.findIdPublicacao(idPublicacao);
+      
+        return res.render('pages/publicacao', {
+          listaErros: erros,  
+          dadosNotificacao: {
+            titulo: 'Erro ao enviar comentário',
+            mensagem: 'O comentário deve ter no mínimo 1 caractere e no máximo 2000',
+            tipo: 'error'
+          },
+          publicacao
+        });
       }
 
       const { conteudo, idPublicacao } = req.body;
@@ -40,28 +54,45 @@ const comentariosController = {
       console.log(resultado)
 
       if (!resultado){
-        return res.status(500).json({erro: "Erro ao salvar comentario"})
+        console.log("Deu erro na validação af");
+      
+        
+        const { idPublicacao } = req.body;
+        const publicacao = await listagensModel.findIdPublicacao(idPublicacao);
+      
+        return res.render('pages/publicacao', {
+          listaErros: erros,  
+          dadosNotificacao: {
+            titulo: 'Erro ao enviar comentário.',
+            mensagem: 'Não foi possível salvar seu comentário.',
+            tipo: 'error'
+          },
+          publicacao
+        });
       }
 
+      const publicacao = await listagensModel.findIdPublicacao(idPublicacao);
 
-      return res.render('pages/publicacao/:id',{
+      return res.render('pages/publicacao',{
         listaErros:null,
         dadosNotificacao:{
           titulo: 'Comentário enviado!',
           mensagem: "Seu comtário foi salvo",
           tipo: "success"
-        }
+        },
+        publicacao
       });
 
     } catch(erro){
       console.error("Erro ao criar comentario:", erro);
-      return res.render('pages/publicacao/:id',{
-        listaErros:erros,
+      return res.render('pages/publicacao',{
+        listaErros: erro,
         dadosNotificacao:{
           titulo: 'feu erro',
           mensagem: "Seu comtário  n foi salvo",
           tipo: "error"
-        }
+        },
+        publicacao
       });
 
     }

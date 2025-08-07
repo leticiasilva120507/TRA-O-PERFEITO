@@ -1,4 +1,5 @@
 const listagensModel = require("../models/listagensModel");
+const comentariosModel = require("../models/comentariosModel");
 const { body, validationResult } = require("express-validator");
 const moment = require("moment");
 
@@ -98,12 +99,19 @@ const listagensController = {
     // Se não encontrar o usuário autenticado, apenas trata como visitante
     // Se não estiver autenticado, apenas mostra a publicação normalmente
 
+    const comentarios = await comentariosModel.listarComentarios(id);
+
     console.log("Dados da publicação sendo exibida:", publicacao);
     console.log("Usuário autenticado passado para a view:", usuario);
     res.render('pages/publicacao', {
       publicacao,
+      comentarios,
+      listaErros: null,
       usuario: usuario || null,
-      autenticado: !!usuario // true se logado, false se não
+      autenticado: !!usuario, // true se logado, false se não
+      dadosNotificacao: null, 
+      
+
     });
   } catch (erro) {
     console.log(erro);
