@@ -35,13 +35,6 @@ app.use("/", rotas);
 const rotaAdm = require("./app/routes/router-adm");
 app.use("/adm", rotaAdm);
 
-// Rotas de comentários
-const comentariosRoutes = require('./app/routes/comentarios');
-app.use('/comentarios', comentariosRoutes);
-
-// Rotas do chat
-const chatRoutes = require('./app/routes/chat');
-app.use('/chat', chatRoutes);
 
 
 app.listen(process.env.APP_PORT, ()=>{

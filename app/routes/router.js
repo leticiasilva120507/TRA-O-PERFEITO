@@ -5,6 +5,7 @@ const { body, validationResult } = require("express-validator");
 const usuariosController = require("../controllers/usuariosController");
 const listagensController = require("../controllers/listagensController");
 const publicacoesController = require("../controllers/publicacoesController");
+const comentariosController = require("../controllers/comentariosController");
 
 const {
   verificarUsuAutenticado,
@@ -62,14 +63,17 @@ router.get("/publicacoes-perfil", function (req, res) { //publicações de um pe
 router.get("/publicacao/:id", function (req, res) { //publicacao
 
     listagensController.exibirPublicacao(req, res);
+   
 
 });
 
-const comentariosRouter = require('./routes/comentarios'); // ajuste o caminho
-app.use('/comentarios', comentariosRouter);
-
-
-
+router.post(
+    "/salvarcomentario",
+    comentariosController.regrasValidacaoComentario,
+    async function (req, res) {
+      comentariosController.criarComentario(req, res);
+    }
+  );
 
 router.get("/chat", function (req, res) { //chat
     res.render('pages/chat')
