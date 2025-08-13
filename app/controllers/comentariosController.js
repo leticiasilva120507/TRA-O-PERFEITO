@@ -27,8 +27,11 @@ const comentariosController = {
       
         
         const { idPublicacao } = req.body;
-        const publicacao = await listagensModel.findIdPublicacao(idPublicacao);
-      
+        const publicacao = await listagensModel.findIdPublicacao(idPublicacao); // só publicacao atual 
+        // consulta buscar todos os comentarios desta publicacao
+        console.log("publi>>>")
+        console.log(publicacao)
+        console.log("publi<<<")
         return res.render('pages/publicacao', {
           listaErros: erros,  
           dadosNotificacao: {
@@ -36,7 +39,8 @@ const comentariosController = {
             mensagem: 'O comentário deve ter no mínimo 1 caractere e no máximo 2000',
             tipo: 'error'
           },
-          publicacao
+          publicacao,
+          //objto com lista de comentarios - null caso não tenha comentario
         });
       }
 
