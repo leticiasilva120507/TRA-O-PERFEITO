@@ -577,7 +577,7 @@ input[type="file"] {
 
 .dentro-modal{
   background:#fff;
-   margin:5% auto; 
+   margin:7% auto; 
    padding:20px;
     max-width: 450px;
     border-radius: 10px;
@@ -587,7 +587,7 @@ font-family: "Montserrat";
 }
 
 .dentro-modal p{
-  margin-bottom: 7px;
+  margin: 20px;
 }
 
 #confirm-description{
@@ -599,6 +599,8 @@ word-wrap: break-word;     /* Compatibilidade antiga */
 color: rgb(18, 18, 18);
 font-family: "Montserrat";
 margin-bottom: 10px;
+font-size: 20px;
+text-align: center;
 }
 
 #confirm-images{
@@ -608,6 +610,7 @@ margin-bottom: 10px;
 #confirm-images img{
   border-radius: 5px;
     box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    margin: 20px;
 }
 
 .btns-modal {
@@ -629,7 +632,7 @@ margin-bottom: 10px;
 }
 
 #send-btn{
-  background-color: rgb(19, 35, 82);
+  background-color: rgb(44, 72, 158);
 }
 
 
