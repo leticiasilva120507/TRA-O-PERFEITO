@@ -375,6 +375,7 @@ input[type="file"] {
         justify-content: space-around;
         padding: 0px 20px;
         margin-bottom: 20px;
+        width: 90%;
     }
 
 
@@ -390,7 +391,7 @@ input[type="file"] {
   position:fixed; 
   top:0; left:0; 
   margin-top: 10%;
-  width:100%; 
+  width:90%; 
   height:100%;
    background:rgba(0,0,0,0.5);
    z-index: 9;
@@ -436,6 +437,21 @@ input[type="file"] {
         padding: 10px;
        
       }
+
+      .dentro-modal{
+      
+        margin: auto;
+       min-width: none;
+       width: 90%; /* largura fixa */
+        height: 470px;    /* altura fixa */
+        border-radius: 10px;
+        z-index: 10;
+        color: rgb(18, 18, 18);
+        font-family: "Montserrat";
+        overflow-y: auto; /* rolagem se precisar */
+      }
+      
+      
 
 
    }
@@ -589,7 +605,7 @@ input[type="file"] {
   margin: 7% auto;
   padding: 20px;
   max-width: 450px; /* largura fixa */
-  height: 500px;    /* altura fixa */
+  height: 470px;    /* altura fixa */
   border-radius: 10px;
   z-index: 10;
   color: rgb(18, 18, 18);
@@ -622,14 +638,16 @@ color: rgb(18, 18, 18);
   gap: 10px;
   justify-content: start; /* ou 'center' se preferir centralizado */
   white-space: normal !important; /* garante quebra de linha */
-  overflow: visible
+  overflow: visible;
+  max-width: 80%;
+  margin: 0 auto;
 }
 
 #confirm-images img{
- width: 80px !important;
-  height: 80px !important;
-  margin-bottom: 20px;
-  margin-left: 20px;
+ width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 1;
+
   object-fit: cover;
   border-radius: 6px;
   box-shadow: 0 0 4px rgba(0,0,0,0.3);    
