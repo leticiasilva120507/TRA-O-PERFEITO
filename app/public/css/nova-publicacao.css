@@ -631,26 +631,20 @@ color: rgb(18, 18, 18);
   text-align: center;
 }
 
-#confirm-images{
-  display: grid !important;
-  grid-template-columns: repeat(5, 75px) !important; /* 5 colunas */
-  grid-auto-rows: 75px;                               /* altura das linhas */
-  gap: 10px;
-  justify-content: start; /* ou 'center' se preferir centralizado */
-  white-space: normal !important; /* garante quebra de linha */
-  overflow: visible;
-  max-width: 80%;
-  margin: 0 auto;
+#confirm-images {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 colunas sempre */
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
 }
 
-#confirm-images img{
- width: 100% !important;
-  height: 100% !important;
+#confirm-images img {
+  width: 100%;
   aspect-ratio: 1;
-
   object-fit: cover;
   border-radius: 6px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.3);    
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
 
 
